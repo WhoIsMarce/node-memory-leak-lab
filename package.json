@@ -1,0 +1,21 @@
+{
+  "name": "node-memory-leak-lab",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node --expose-gc src/server.js",
+    "start:fixed": "node --expose-gc src/server.fixed.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "description": "Express service with two memory leaks, plus tools to find them with heap snapshots and fix them",
+  "type": "module",
+  "dependencies": {
+    "express": "^5.3.0"
+  },
+  "devDependencies": {
+    "autocannon": "^8.0.0"
+  }
+}
