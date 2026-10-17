@@ -23,7 +23,7 @@ This repository accompanies the article
 ## Setup
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/TU_USUARIO/node-memory-leak-lab.git
 cd node-memory-leak-lab
 npm install
 ```
@@ -147,11 +147,11 @@ during this test: thousands of legitimate subscribers wait for the next tick.
 
 ## Project layout
 
-```text
 src/server.js         # service with the two leaks
 src/server.fixed.js   # same service with both fixes applied
+src/hardening.js      # security headers, input validation, debug routes
+test/smoke.test.js    # smoke tests, run with `npm test`
 load/run.js           # load generator built on autocannon
-```
 
 ## Troubleshooting
 
@@ -176,4 +176,21 @@ load/run.js           # load generator built on autocannon
 - In Express 5, the `app.listen` callback also runs when the server emits an
   error, so `server.js` checks the `err` argument before logging success.
 
+  ## Security notes
+
+- The server listens on `127.0.0.1` only. Set `HOST` to change it; the server
+  warns when debug endpoints are reachable from other machines.
+- `/debug/*` endpoints exist only when `NODE_ENV` is not `production`. A heap
+  snapshot contains everything in memory, secrets included.
+- `/report` validates its input and unknown routes return a JSON 404.
+  Responses carry security headers (`helmet`).
+- `npm test` runs the smoke tests. CI runs them with `npm audit` on the
+  runtime dependencies.
+- `npm audit` also reports moderate findings in `autocannon` (a dev-only load
+  tool). Do not run `npm audit fix --force`: it downgrades `autocannon`.
+- No rate limiting, authentication or CORS is configured because the lab has no
+  users. In production, rate limiting belongs at the edge.
+
 ## License
+
+This project is released under the MIT License. See the [LICENSE](LICENSE) file for the full text.
